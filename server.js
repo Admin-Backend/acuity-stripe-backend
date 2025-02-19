@@ -12,8 +12,8 @@ app.post('/create-checkout-session', async (req, res) => {
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'payment',
-            success_url: 'https://your-website.com/success',
-            cancel_url: 'https://your-website.com/cancel',
+            success_url: 'https://acuity-stripe-backend-production.up.railway.app/success',
+            cancel_url: 'https://acuity-stripe-backend-production.up.railway.app/cancel',
             line_items: [
                 {
                     price_data: {
