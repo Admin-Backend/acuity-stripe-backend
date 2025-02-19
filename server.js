@@ -7,8 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Create a Stripe Checkout Session
-app.post('/create-checkout-session', async (req, res) => {
+// 1) Direct GET route that creates a Stripe Checkout session & redirects.
+app.get('/create-checkout-session', async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -28,24 +28,25 @@ app.post('/create-checkout-session', async (req, res) => {
         },
       ],
     });
-    res.json({ id: session.id });
+    // 2) Redirect the browser to the Stripe Checkout URL
+    return res.redirect(303, session.url);
   } catch (error) {
     console.error('Error creating Stripe session:', error);
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
-// Success route (optional)
+// Optional success page
 app.get('/success', (req, res) => {
   res.send('Payment successful! Thank you!');
 });
 
-// Cancel route (optional)
+// Optional cancel page
 app.get('/cancel', (req, res) => {
   res.send('Payment canceled. Maybe next time!');
 });
 
-// Listen on Render’s assigned port or default to 8080
+// Server port
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
