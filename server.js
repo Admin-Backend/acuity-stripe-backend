@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// ✅ Stripe Checkout Session Route
+// Stripe Checkout Route
 app.post('/create-checkout-session', async (req, res) => {
     try {
         const session = await stripe.checkout.sessions.create({
@@ -30,15 +30,16 @@ app.post('/create-checkout-session', async (req, res) => {
         });
         res.json({ id: session.id });
     } catch (error) {
+        console.error("Error creating Stripe session:", error);
         res.status(500).json({ error: error.message });
     }
 });
 
-// ✅ Fix Port Issue - Match Railway's Assigned Port
-const PORT = process.env.PORT || 8080;  // Use 8080 since Railway assigned it
-app.listen(PORT, "0.0.0.0", () => console.log(`🚀 Server running on port ${PORT}`));
+// Listen on Railway’s assigned port (or use 8080 if not provided)
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 Server running on port ${PORT}`));
 
-// ✅ Test Route to Verify Deployment
+// Test Route to verify the server is live
 app.get("/", (req, res) => {
     res.send("✅ Server is running!");
 });
