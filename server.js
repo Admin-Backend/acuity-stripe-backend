@@ -34,3 +34,8 @@ app.post('/create-checkout-session', async (req, res) => {
 });
 
 app.listen(4242, () => console.log("Server running on port 4242"));
+
+app.get("/", (req, res) => {
+    res.send("Server is running!");
+});
+
